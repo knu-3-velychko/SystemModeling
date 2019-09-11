@@ -1,6 +1,8 @@
 data=dlmread('f19.txt','');
-t=0:0.01:5.0;
+dt=0.01
+T=5
+t=0:dt:T;
 plot(t,data);
 xlabel("T");
-ylabel("Data");
-title("Test");
+ylabel("y(ti)");
+title("Input data");
