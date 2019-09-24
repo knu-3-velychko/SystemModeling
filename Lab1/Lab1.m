@@ -1,8 +1,16 @@
+clc
+clear
 data=dlmread('f19.txt','');
 dt=0.01
 T=5
 t=0:dt:T;
-plot(t,data);
-xlabel("T");
-ylabel("y(ti)");
-title("Input data");
+figure
+plot(t(1:50),data(1:50));
+fy=fft(data);
+figure
+df=1/T;
+n=length(t);
+plot(abs(fy)),grid
+f=0:df:roung(n/2)*df;
+figure
+plot(f,fy);

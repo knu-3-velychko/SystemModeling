@@ -7,7 +7,7 @@ with open('f19.txt') as file:
     inputData = np.array([float(val) for val in file.read().split()])
 
 T = 5
-dt = 0.1
+dt = 0.01
 time = np.arange(0, T+dt, dt)
 plt.grid(True)
 plt.rc('figure', figsize=(30.0, 10.0))
@@ -36,3 +36,6 @@ for i in range(3, n // 2):
         biggestValue.append(i)
         print(frequency[i])
 mainFrequency = biggestValue[0]/T
+#%%
+b = np.array([np.sum(inputData * time ** 3), np.sum(inputData * time ** 2), np.sum(inputData * time),
+              np.sum(inputData * np.sin(2. * np.pi * mainFrequency * time)), np.sum(inputData)])
