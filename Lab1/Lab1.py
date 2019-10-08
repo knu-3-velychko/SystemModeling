@@ -1,5 +1,6 @@
 # %%
 import numpy as np
+import pandas
 # %%
 import matplotlib.pyplot as plt
 # %%
@@ -26,16 +27,13 @@ for pointID in range(n):
     sinFrequency /= float(n)
     cosFrequency /= float(n)
     frequency[pointID] = np.sqrt(sinFrequency**2+cosFrequency**2)
+# %%
 plt.grid(True)
 plt.plot(time, frequency)
-
 # %%
 biggestValue = []
 for i in range(3, n // 2):
-    if np.max(frequency[i-3:i+3]) == frequency[i]:
+    if np.max(frequency[i-2:i+2]) == frequency[i]:
         biggestValue.append(i)
         print(frequency[i])
 mainFrequency = biggestValue[0]/T
-#%%
-b = np.array([np.sum(inputData * time ** 3), np.sum(inputData * time ** 2), np.sum(inputData * time),
-              np.sum(inputData * np.sin(2. * np.pi * mainFrequency * time)), np.sum(inputData)])
