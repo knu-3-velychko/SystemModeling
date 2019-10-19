@@ -10,9 +10,9 @@ clc
     rows = rows(A);
     columns=columns(A);
     if(rows > columns)
-      A_Inv = inv(A'*A - delta^2*eye(columns))*A';
+      A_Inv = inv(A'*A + delta^2*eye(columns))*A';
     else
-      A_Inv = A'*inv(A*A' - delta^2*eye(rows));
+      A_Inv = A'*inv(A*A' + delta^2*eye(rows));
     endif
 endfunction
  
@@ -29,12 +29,17 @@ function retval = MoorePenrose (A)
     diff = norm(A_Inv1-A_Inv2);
     A_Inv1=A_Inv2;
  endwhile  
- retval = A_Inv1;
+ retval = A_Inv2;
  endfunction
  
+
+ 
   V = rand(rows(Y), rows(X));
-  MoorePenrose_X = Moore_Penrose(X);
-  MoorePenrose_Z = eye(rows(X)) - X*MoorePenrose_X';
+  MoorePenrose_X = MoorePenrose(X);
+  MoorePenrose_Z = eye(rows(X)) - X*MoorePenrose_X;
   MoorePenrose_A = Y*MoorePenrose_X + V*MoorePenrose_Z';
+  MoorePenrose_Y=MoorePenrose_A*X;
   
+  imshow(uint8(Y));
+  figure
   imshow(uint8(MoorePenrose_Y));
