@@ -1,9 +1,15 @@
 clear
 clc
  X = imread("x3.bmp");
+ figure
+ imshow(X);
+ title("X input");
  X = double(X);
  
  Y = imread("y5.bmp");
+ figure
+ imshow(Y);
+ title("Y input");
  Y = double(Y);
  
  eps = 1e-12;
@@ -67,9 +73,9 @@ function retval = MoorePenrose (A, eps)
   MoorePenrose_A = Y*MoorePenrose_X + V*MoorePenrose_Z';
   MoorePenrose_Y=MoorePenrose_A*X;
   
-  imshow(uint8(Y));
   figure
   imshow(uint8(MoorePenrose_Y));
+  title("Moore-Penrose formula output");
   
   Greville_X = Greville(X, eps);
   Greville_Z = eye(rows(X)) - X*Greville_X;
@@ -78,3 +84,4 @@ function retval = MoorePenrose (A, eps)
   
   figure
   imshow(uint8(Greville_Y));
+  title("Greville formula output");
