@@ -48,7 +48,7 @@ function retval = MoorePenrose (A, eps)
     rows = rows(A);
     columns = columns(A);
     
-    if(vector.*vector' < eps)
+    if(vector.*vector' == 0)
       A_Inv = vector;
     else
       A_Inv = vector/(vector'*vector);
@@ -68,7 +68,7 @@ function retval = MoorePenrose (A, eps)
     retval = A_Inv;
  endfunction
  
-  V = rand(rows(Y), rows(X));
+  V = ones(rows(Y), rows(X));
     
   MoorePenrose_X = MoorePenrose(X,eps);
   MoorePenrose_Z = eye(rows(X)) - X*MoorePenrose_X;
