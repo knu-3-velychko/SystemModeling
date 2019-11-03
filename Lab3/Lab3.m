@@ -13,7 +13,7 @@ m(3) = 23;
 h = 0.2;
 t = 0.0;
 tk = 50.0;
-eps = 0.000001;
+eps = 1e-6;
 I = inf;
 numIter = 0;
 yGained = zeros(M,N);
@@ -104,10 +104,10 @@ end
     disp(size(yGained))
     plot(0:0.2:50, yExperimental(1,:),0:0.2:50, yGained(1,:));
     %plot();
-    disp('m2: ');
-    disp(m(2));
-    disp('c3: ');
-    disp(c(3));
+    disp('c2: ');
+    disp(c(2));
+    disp('m1: ');
+    disp(m(1));
     disp('m3: ');
     disp(m(3));
     disp('Iterations: ');
