@@ -30,34 +30,35 @@ function res = getA(m, c)
     A(5, 6) = 1;
     A(6, 3) = c(3)/m(3);
     A(6, 5) = -(c(3)+c(4))/m(3);
+    res = A;
 end
 
 function res = fy(A, y)
-  res = A*y
+  res = A*y;
 end
 
-function res = fU(A, U, y)
+function res = fU(A, U, y, m, c)
   C = zeros(6,3);
   C(2, 1) = (y(3)-y(1))/m(1);
-  C(2, 2) = -(c(2)*y(3) - (c(1)+c(2))*y(3))/(m(1)*m(1));
+  C(2, 2) = -(c(2)*y(3) - (c(1)+c(2))*y(1))/(m(1)*m(1));
   C(4, 1) = (y(1) - y(3))/m(2);
   C(6, 3) = -(c(3)*y(3) - (c(3) + c(4))*y(5))/(m(3)*m(3));
-  res = A*U + C
+  res = A*U + C;
 end
 
-function res = RungeKuttU(U, h, y, m, c)
-  k1 = h * fU(U, y, m, c);
-  k2 = h * fU(U + k1/2.0, y, m, c);
-  k3 = h * fU(U + k2/2.0, y, m, c);
-  k4 = h * fU(U + k3, y, m, c);
+function res = RungeKuttU(A, U, h, y, m, c)
+  k1 = h * fU(A, U, y, m, c);
+  k2 = h * fU(A, U + k1/2.0, y, m, c);
+  k3 = h * fU(A, U + k2/2.0, y, m, c);
+  k4 = h * fU(A, U + k3, y, m, c);
   res = U + (k1 + 2*k2 + 2*k3 + k4)/6.0;
 endfunction
 
-function res = RungeKuttY(y, h, m, c)
-  k1 = h * fy(y, m, c);
-  k2 = h * fy(y + k1/2.0, m, c);
-  k3 = h * fy(y + k2/2.0, m, c);
-  k4 = h * fy(y + k3, m, c);
+function res = RungeKuttY(A, y, h, m, c)
+  k1 = h * fy(A, y, m, c);
+  k2 = h * fy(A, y + k1/2.0, m, c);
+  k3 = h * fy(A, y + k2/2.0, m, c);
+  k4 = h * fy(A, y + k3, m, c);
   res = y + (k1 + 2*k2 + 2*k3 + k4)/6.0;
 endfunction
 
@@ -65,5 +66,49 @@ endfunction
 while (I > eps)
   numIter = numIter+1;
   y = yExperimental(:,1);
+  dy = zeros(M,1);
+  U = zeros(6,3);
+  B = zeros(3,3);
+  b = zeros(3,1);
+  I = 0.0;
+  i = 2;
+  for iter = 1:M
+    yGained(iter,1) = y(iter,1);
+  end
   
+  while(i<=N)
+    A = getA(m,c);
+    Unew = RungeKuttU(A, U, h, y, m, c);
+    yNew = RungeKuttY(A, y, h, m, c);
+    dyNew = yExperimental(:,i)-yNew;
+    for iter = 1:M
+      yGained(iter,i)=y(iter,1);
+    end
+   B = B + h*(U'*U + Unew'*Unew)/2.0;
+   b = b + h*(U'*dy + Unew'*dyNew)/2.0;
+   I = I + h*(dy'*dy + dyNew'*dyNew)/2.0;
+
+   U = Unew;
+   y = yNew;
+   dy = dyNew;
+   i = i + 1;
+    end
+    delta = pinv(B)*b;
+    c(2) = c(2) + delta(1);
+    m(1) = m(1) + delta(2);
+    m(3) = m(3) + delta(3);
+    disp(I);
+    figure
+    plot(0:0.2:50, yExperimental(1,:),0:0.2:50, yGained(1,:));
 end
+    disp(size(yGained))
+    plot(0:0.2:50, yExperimental(1,:),0:0.2:50, yGained(1,:));
+    %plot();
+    disp('m2: ');
+    disp(m(2));
+    disp('c3: ');
+    disp(c(3));
+    disp('m3: ');
+    disp(m(3));
+    disp('Iterations: ');
+    disp(numIter);
